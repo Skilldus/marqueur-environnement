@@ -1,0 +1,12 @@
+/dist
+/node_modules
+/.idea
+/.vscode
+/.DS_Store
+*.log
+*.env
+*.zip
+*.tar.gz
+*.tgz
+*.exe
+*.iml
