@@ -1,0 +1,232 @@
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-style: italic;
+}
+
+.env-banner {
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.env-ribbon-wrapper {
+    pointer-events: none;
+    position: fixed;
+    z-index: 999999;
+}
+
+/* Retirer les overrides pour top/bottom, le JS gère maintenant */
+.env-ribbon-wrapper.top {
+    top: 0;
+}
+
+.env-ribbon-wrapper.bottom {
+    bottom: 0;
+}
+
+.env-ribbon-wrapper.top-left,
+.env-ribbon-wrapper.top-right,
+.env-ribbon-wrapper.bottom-left,
+.env-ribbon-wrapper.bottom-right {
+    width: 290px;
+    height: 55px;
+    overflow-x: hidden;
+    box-shadow: 7px 0px 9px #000;
+}
+
+.env-ribbon-wrapper.top-left {
+    left: -72px;
+    top: 45px;
+    transform: rotate(-45deg);
+}
+
+.env-ribbon-wrapper.top-right {
+    right: -72px;
+    top: 45px;
+    transform: rotate(45deg);
+}
+
+.env-ribbon-wrapper.bottom-left {
+    left: -72px;
+    bottom: 45px;
+    transform: rotate(45deg);
+}
+
+.env-ribbon-wrapper.bottom-right {
+    right: -72px;
+    bottom: 45px;
+    transform: rotate(-45deg);
+}
+
+.env-ribbon-wrapper.top-left .env-banner,
+.env-ribbon-wrapper.top-right .env-banner,
+.env-ribbon-wrapper.bottom-left .env-banner,
+.env-ribbon-wrapper.bottom-right .env-banner {
+    margin: 0 45px;
+    line-height: 55px;
+    height: 100%;
+    width: calc(100% - 90px);
+    padding: 0;
+    background-color: inherit;
+}
+
+.env-ribbon-wrapper .env-banner {
+    align-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+    text-align: center;
+    width: 100%;
+}
+
+.env-ribbon-wrapper.top .env-banner,
+.env-ribbon-wrapper.bottom .env-banner {
+    min-height: 28px;
+    padding: 6px 0;
+}
+
+.env-ribbon-wrapper .env-banner span {
+    white-space: nowrap;
+    max-width: 80%;
+}
+
+/* Tailles pour bandeaux horizontaux (top/bottom) */
+.env-ribbon-wrapper.top.small .env-banner,
+.env-ribbon-wrapper.bottom.small .env-banner {
+    min-height: 24px;
+    padding: 4px 0;
+    font-size: 11px;
+}
+
+.env-ribbon-wrapper.top.medium .env-banner,
+.env-ribbon-wrapper.bottom.medium .env-banner {
+    min-height: 28px;
+    padding: 6px 0;
+    font-size: 13px;
+}
+
+.env-ribbon-wrapper.top.large .env-banner,
+.env-ribbon-wrapper.bottom.large .env-banner {
+    min-height: 36px;
+    padding: 8px 0;
+    font-size: 16px;
+}
+
+/* Tailles pour rubans diagonaux (coins) */
+.env-ribbon-wrapper.top-left.small,
+.env-ribbon-wrapper.top-right.small,
+.env-ribbon-wrapper.bottom-left.small,
+.env-ribbon-wrapper.bottom-right.small {
+    width: 240px;
+    height: 40px;
+}
+
+.env-ribbon-wrapper.top-left.small {
+    left: -58px;
+    top: 35px;
+}
+
+.env-ribbon-wrapper.top-right.small {
+    right: -58px;
+    top: 35px;
+}
+
+.env-ribbon-wrapper.bottom-left.small {
+    left: -58px;
+    bottom: 35px;
+}
+
+.env-ribbon-wrapper.bottom-right.small {
+    right: -58px;
+    bottom: 35px;
+}
+
+.env-ribbon-wrapper.top-left.small .env-banner,
+.env-ribbon-wrapper.top-right.small .env-banner,
+.env-ribbon-wrapper.bottom-left.small .env-banner,
+.env-ribbon-wrapper.bottom-right.small .env-banner {
+    line-height: 40px;
+    font-size: 11px;
+    margin: 0 38px;
+    width: calc(100% - 76px);
+}
+
+.env-ribbon-wrapper.top-left.medium,
+.env-ribbon-wrapper.top-right.medium,
+.env-ribbon-wrapper.bottom-left.medium,
+.env-ribbon-wrapper.bottom-right.medium {
+    width: 290px;
+    height: 55px;
+}
+
+.env-ribbon-wrapper.top-left.medium {
+    left: -72px;
+    top: 45px;
+}
+
+.env-ribbon-wrapper.top-right.medium {
+    right: -72px;
+    top: 45px;
+}
+
+.env-ribbon-wrapper.bottom-left.medium {
+    left: -72px;
+    bottom: 45px;
+}
+
+.env-ribbon-wrapper.bottom-right.medium {
+    right: -72px;
+    bottom: 45px;
+}
+
+.env-ribbon-wrapper.top-left.medium .env-banner,
+.env-ribbon-wrapper.top-right.medium .env-banner,
+.env-ribbon-wrapper.bottom-left.medium .env-banner,
+.env-ribbon-wrapper.bottom-right.medium .env-banner {
+    line-height: 55px;
+    font-size: 13px;
+}
+
+.env-ribbon-wrapper.top-left.large,
+.env-ribbon-wrapper.top-right.large,
+.env-ribbon-wrapper.bottom-left.large,
+.env-ribbon-wrapper.bottom-right.large {
+    width: 350px;
+    height: 70px;
+}
+
+.env-ribbon-wrapper.top-left.large {
+    left: -88px;
+    top: 55px;
+}
+
+.env-ribbon-wrapper.top-right.large {
+    right: -88px;
+    top: 55px;
+}
+
+.env-ribbon-wrapper.bottom-left.large {
+    left: -88px;
+    bottom: 55px;
+}
+
+.env-ribbon-wrapper.bottom-right.large {
+    right: -88px;
+    bottom: 55px;
+}
+
+.env-ribbon-wrapper.top-left.large .env-banner,
+.env-ribbon-wrapper.top-right.large .env-banner,
+.env-ribbon-wrapper.bottom-left.large .env-banner,
+.env-ribbon-wrapper.bottom-right.large .env-banner {
+    line-height: 70px;
+    font-size: 16px;
+    margin: 0 55px;
+    width: calc(100% - 110px);
+}
