@@ -58,6 +58,13 @@
             </form>
         </div>
 
+        <div class="io-section">
+            <button type="button" class="btn btn-export" id="exportBtn">⬇️ Exporter les règles</button>
+            <label class="btn btn-import" for="importFile">⬆️ Importer des règles</label>
+            <input type="file" id="importFile" accept=".json" hidden />
+            <span id="importFeedback" class="import-feedback" hidden></span>
+        </div>
+
         <div class="rules-section">
             <h2 class="section-title">Règles configurées (<span id="rulesCount">0</span>)</h2>
             <ul id="rules" class="rules-list"></ul>
