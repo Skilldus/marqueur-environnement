@@ -199,6 +199,9 @@ const importRules = (file: File) => {
             showFeedback(`❌ Erreur : ${(err as Error).message}`, true);
         }
     };
+    reader.onerror = () => {
+        showFeedback("❌ Erreur lors de la lecture du fichier d'import.", true);
+    };
     reader.readAsText(file);
 };
 
