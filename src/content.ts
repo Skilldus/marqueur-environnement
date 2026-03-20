@@ -81,7 +81,12 @@ chrome.storage.sync.get({ rules: [] }, (data) => {
     const url = window.location.href;
 
     for (const rule of rules) {
-        const regex = new RegExp(rule.pattern);
+        let regex: RegExp;
+        try {
+            regex = new RegExp(rule.pattern);
+        } catch {
+            continue;
+        }
         if (regex.test(url)) {
             injectBanner(rule);
             break;

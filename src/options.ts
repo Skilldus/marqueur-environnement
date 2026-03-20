@@ -174,9 +174,10 @@ const importRules = (file: File) => {
             const parsed = JSON.parse(e.target?.result as string);
             if (!Array.isArray(parsed)) throw new Error("Format invalide");
 
-            // Validation basique de chaque règle
+            // Validation stricte de chaque règle
             const validPositions: RulePosition[] = ["top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"];
             const validSizes: RuleSize[] = ["small", "medium", "large"];
+            const colorRegex = /^#[0-9A-Fa-f]{6}$/;
             const rules: Rule[] = parsed.map((r: unknown) => {
                 const rule = r as Record<string, unknown>;
                 if (
@@ -188,6 +189,14 @@ const importRules = (file: File) => {
                 ) {
                     throw new Error("Une ou plusieurs règles sont invalides");
                 }
+                if (!colorRegex.test(rule.color as string)) {
+                    throw new Error(`Couleur invalide "${rule.color}" : le format attendu est #RRGGBB`);
+                }
+                try {
+                    new RegExp(rule.pattern as string);
+                } catch {
+                    throw new Error(`Expression régulière invalide : "${rule.pattern}"`);
+                }
                 return rule as unknown as Rule;
             });
 
@@ -198,6 +207,9 @@ const importRules = (file: File) => {
         } catch (err) {
             showFeedback(`❌ Erreur : ${(err as Error).message}`, true);
         }
+    };
+    reader.onerror = () => {
+        showFeedback("❌ Erreur : impossible de lire le fichier", true);
     };
     reader.readAsText(file);
 };
