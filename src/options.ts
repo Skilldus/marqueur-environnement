@@ -8,6 +8,9 @@ const rulesCount = document.getElementById("rulesCount") as HTMLSpanElement;
 const emptyState = document.getElementById("emptyState") as HTMLParagraphElement;
 const submitRuleBtn = document.getElementById("submitRule") as HTMLButtonElement;
 const cancelEditBtn = document.getElementById("cancelEdit") as HTMLButtonElement;
+const exportBtn = document.getElementById("exportBtn") as HTMLButtonElement;
+const importFile = document.getElementById("importFile") as HTMLInputElement;
+const importFeedback = document.getElementById("importFeedback") as HTMLSpanElement;
 
 let editingIndex: number | null = null;
 
@@ -142,6 +145,87 @@ const loadRules = () => {
     });
 };
 
+let feedbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+const showFeedback = (message: string, isError = false) => {
+    if (feedbackTimer !== null) {
+        clearTimeout(feedbackTimer);
+    }
+    importFeedback.textContent = message;
+    importFeedback.className = "import-feedback" + (isError ? " error" : "");
+    importFeedback.hidden = false;
+    feedbackTimer = setTimeout(() => {
+        importFeedback.hidden = true;
+        feedbackTimer = null;
+    }, 3000);
+};
+
+const exportRules = () => {
+    chrome.storage.sync.get({ rules: [] }, (data) => {
+        const json = JSON.stringify(data.rules, null, 2);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "marqueur-environnement-rules.json";
+        a.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 100);
+    });
+};
+
+const importRules = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const parsed = JSON.parse(e.target?.result as string);
+            if (!Array.isArray(parsed)) throw new Error("Format invalide");
+
+            // Validation stricte de chaque règle
+            const validPositions: RulePosition[] = ["top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"];
+            const validSizes: RuleSize[] = ["small", "medium", "large"];
+            const colorRegex = /^#[0-9A-Fa-f]{6}$/;
+            const rules: Rule[] = parsed.map((r: unknown) => {
+                const rule = r as Record<string, unknown>;
+                if (
+                    typeof rule.pattern !== "string" ||
+                    typeof rule.label !== "string" ||
+                    typeof rule.color !== "string" ||
+                    !validPositions.includes(rule.position as RulePosition) ||
+                    !validSizes.includes(rule.size as RuleSize)
+                ) {
+                    throw new Error("Une ou plusieurs règles sont invalides");
+                }
+                if (!colorRegex.test(rule.color as string)) {
+                    throw new Error(`Couleur invalide "${rule.color}" : le format attendu est #RRGGBB`);
+                }
+                try {
+                    new RegExp(rule.pattern as string);
+                } catch {
+                    throw new Error(`Expression régulière invalide : "${rule.pattern}"`);
+                }
+                return rule as unknown as Rule;
+            });
+
+            chrome.storage.sync.set({ rules }, () => {
+                if (chrome.runtime.lastError) {
+                    showFeedback(`❌ Erreur lors de la sauvegarde : ${chrome.runtime.lastError.message}`, true);
+                    return;
+                }
+                showFeedback(`✅ ${rules.length} règle(s) importée(s) avec succès`);
+                loadRules();
+            });
+        } catch (err) {
+            showFeedback(`❌ Erreur : ${(err as Error).message}`, true);
+        }
+    };
+    reader.onerror = () => {
+        showFeedback("❌ Erreur lors de la lecture du fichier d'import.", true);
+    };
+    reader.readAsText(file);
+};
+
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -170,6 +254,16 @@ form.addEventListener("submit", (e) => {
 
 cancelEditBtn.addEventListener("click", () => {
     resetFormState();
+});
+
+exportBtn.addEventListener("click", exportRules);
+
+importFile.addEventListener("change", () => {
+    const file = importFile.files?.[0];
+    if (file) {
+        importRules(file);
+        importFile.value = ""; // reset pour permettre re-import du même fichier
+    }
 });
 
 setFormMode("create");

@@ -7,7 +7,7 @@
 
 .env-banner {
     font-family: Inter, "Segoe UI", Arial, sans-serif;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -35,7 +35,7 @@
     width: 290px;
     height: 55px;
     overflow-x: hidden;
-    box-shadow: 7px 0px 9px #000;
+    box-shadow: 7px 0 9px #000;
 }
 
 .env-ribbon-wrapper.top-left {
@@ -101,21 +101,21 @@
 .env-ribbon-wrapper.bottom.small .env-banner {
     min-height: 24px;
     padding: 4px 0;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .env-ribbon-wrapper.top.medium .env-banner,
 .env-ribbon-wrapper.bottom.medium .env-banner {
     min-height: 28px;
     padding: 6px 0;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .env-ribbon-wrapper.top.large .env-banner,
 .env-ribbon-wrapper.bottom.large .env-banner {
     min-height: 36px;
     padding: 8px 0;
-    font-size: 16px;
+    font-size: 19px;
 }
 
 /* Tailles pour rubans diagonaux (coins) */
@@ -190,7 +190,7 @@
 .env-ribbon-wrapper.bottom-left.medium .env-banner,
 .env-ribbon-wrapper.bottom-right.medium .env-banner {
     line-height: 55px;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .env-ribbon-wrapper.top-left.large,

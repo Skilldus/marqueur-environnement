@@ -267,3 +267,55 @@ button {
     color: var(--muted);
     font-style: italic;
 }
+
+/* Section import/export */
+.io-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.btn-export {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-export:hover {
+    background: var(--primary-hover);
+}
+
+.btn-import {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-radius: 10px;
+    padding: 0 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #10b981;
+    color: #fff;
+    border: none;
+}
+
+.btn-import:hover {
+    background: #059669;
+}
+
+.import-feedback {
+    font-size: 0.875rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #d1fae5;
+    color: #065f46;
+    font-weight: 500;
+}
+
+.import-feedback.error {
+    background: #fee2e2;
+    color: #991b1b;
+}
