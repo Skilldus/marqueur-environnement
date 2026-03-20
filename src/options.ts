@@ -200,6 +200,10 @@ const importRules = (file: File) => {
             });
 
             chrome.storage.sync.set({ rules }, () => {
+                if (chrome.runtime.lastError) {
+                    showFeedback(`❌ Erreur lors de la sauvegarde : ${chrome.runtime.lastError.message}`, true);
+                    return;
+                }
                 showFeedback(`✅ ${rules.length} règle(s) importée(s) avec succès`);
                 loadRules();
             });
