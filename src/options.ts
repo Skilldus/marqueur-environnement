@@ -145,11 +145,19 @@ const loadRules = () => {
     });
 };
 
+let feedbackTimer: ReturnType<typeof setTimeout> | null = null;
+
 const showFeedback = (message: string, isError = false) => {
+    if (feedbackTimer !== null) {
+        clearTimeout(feedbackTimer);
+    }
     importFeedback.textContent = message;
     importFeedback.className = "import-feedback" + (isError ? " error" : "");
     importFeedback.hidden = false;
-    setTimeout(() => { importFeedback.hidden = true; }, 3000);
+    feedbackTimer = setTimeout(() => {
+        importFeedback.hidden = true;
+        feedbackTimer = null;
+    }, 3000);
 };
 
 const exportRules = () => {
@@ -201,6 +209,10 @@ const importRules = (file: File) => {
             });
 
             chrome.storage.sync.set({ rules }, () => {
+                if (chrome.runtime.lastError) {
+                    showFeedback(`❌ Erreur lors de la sauvegarde : ${chrome.runtime.lastError.message}`, true);
+                    return;
+                }
                 showFeedback(`✅ ${rules.length} règle(s) importée(s) avec succès`);
                 loadRules();
             });
@@ -209,7 +221,7 @@ const importRules = (file: File) => {
         }
     };
     reader.onerror = () => {
-        showFeedback("❌ Erreur : impossible de lire le fichier", true);
+        showFeedback("❌ Erreur lors de la lecture du fichier d'import.", true);
     };
     reader.readAsText(file);
 };
