@@ -145,11 +145,19 @@ const loadRules = () => {
     });
 };
 
+let feedbackTimer: ReturnType<typeof setTimeout> | null = null;
+
 const showFeedback = (message: string, isError = false) => {
+    if (feedbackTimer !== null) {
+        clearTimeout(feedbackTimer);
+    }
     importFeedback.textContent = message;
     importFeedback.className = "import-feedback" + (isError ? " error" : "");
     importFeedback.hidden = false;
-    setTimeout(() => { importFeedback.hidden = true; }, 3000);
+    feedbackTimer = setTimeout(() => {
+        importFeedback.hidden = true;
+        feedbackTimer = null;
+    }, 3000);
 };
 
 const exportRules = () => {
