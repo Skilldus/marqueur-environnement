@@ -161,7 +161,9 @@ const exportRules = () => {
         a.href = url;
         a.download = "marqueur-environnement-rules.json";
         a.click();
-        URL.revokeObjectURL(url);
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 100);
     });
 };
 
