@@ -60,7 +60,7 @@
 
         <div class="io-section">
             <button type="button" class="btn btn-export" id="exportBtn">⬇️ Exporter les règles</button>
-            <label class="btn btn-import" for="importFile">⬆️ Importer des règles</label>
+            <button type="button" class="btn btn-import" id="importBtn" onclick="document.getElementById('importFile').click()">⬆️ Importer des règles</button>
             <input type="file" id="importFile" accept=".json" hidden />
             <span id="importFeedback" class="import-feedback" hidden></span>
         </div>
