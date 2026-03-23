@@ -34,7 +34,7 @@ const getContrastTextColor = (backgroundColor: string): string => {
     return luminance > 0.5 ? "black" : "white";
 };
 
-const injectBanner = (rule: Rule) => {
+export const injectBanner = (rule: Rule) => {
     const isHorizontal = rule.position === "top" || rule.position === "bottom";
 
     const wrapper = document.createElement("div");
@@ -46,7 +46,7 @@ const injectBanner = (rule: Rule) => {
     banner.style.color = getContrastTextColor(rule.color);
 
     const label = document.createElement("span");
-    label.innerText = rule.label;
+    label.textContent = rule.label;
     banner.appendChild(label);
     wrapper.appendChild(banner);
 

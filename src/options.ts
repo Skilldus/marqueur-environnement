@@ -1,4 +1,5 @@
 import {Rule, RulePosition, RuleSize} from "./types";
+import { getPositionLabel, getSizeLabel, validateImportedRules } from "./utils";
 
 const form = document.getElementById("ruleForm") as HTMLFormElement;
 const formSection = document.querySelector(".form-section") as HTMLElement;
@@ -9,16 +10,17 @@ const emptyState = document.getElementById("emptyState") as HTMLParagraphElement
 const submitRuleBtn = document.getElementById("submitRule") as HTMLButtonElement;
 const cancelEditBtn = document.getElementById("cancelEdit") as HTMLButtonElement;
 const exportBtn = document.getElementById("exportBtn") as HTMLButtonElement;
+const importBtn = document.getElementById("importBtn") as HTMLButtonElement;
 const importFile = document.getElementById("importFile") as HTMLInputElement;
 const importFeedback = document.getElementById("importFeedback") as HTMLSpanElement;
 
 let editingIndex: number | null = null;
 
-const setFormMode = (mode: "create" | "edit") => {
+export const setFormMode = (mode: "create" | "edit") => {
     const isEdit = mode === "edit";
-    submitRuleBtn.innerText = isEdit ? "Enregistrer" : "Ajouter";
+    submitRuleBtn.textContent = isEdit ? "Enregistrer" : "Ajouter";
     cancelEditBtn.hidden = !isEdit;
-    formTitle.innerText = isEdit ? "Modifier la règle" : "Ajouter une règle";
+    formTitle.textContent = isEdit ? "Modifier la règle" : "Ajouter une règle";
 
     if (isEdit) {
         formSection.classList.add("editing");
@@ -41,97 +43,68 @@ const fillForm = (rule: Rule, index: number) => {
     (document.getElementById("size") as HTMLSelectElement).value = rule.size;
     editingIndex = index;
     setFormMode("edit");
-
-    // Scroll vers le formulaire
     formSection.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
-const getPositionLabel = (position: RulePosition): string => {
-    const labels: Record<RulePosition, string> = {
-        "top": "Haut",
-        "bottom": "Bas",
-        "top-left": "Coin haut gauche",
-        "top-right": "Coin haut droite",
-        "bottom-left": "Coin bas gauche",
-        "bottom-right": "Coin bas droite"
-    };
-    return labels[position];
-};
-
-const getSizeLabel = (size: RuleSize): string => {
-    const labels: Record<RuleSize, string> = {
-        "small": "Petite",
-        "medium": "Moyenne",
-        "large": "Grande"
-    };
-    return labels[size];
-};
-
-const loadRules = () => {
+export const loadRules = () => {
     chrome.storage.sync.get({ rules: [] }, (data) => {
         const rules: Rule[] = data.rules as Rule[];
         rulesList.innerHTML = "";
 
-        rulesCount.innerText = rules.length.toString();
+        rulesCount.textContent = rules.length.toString();
         emptyState.hidden = rules.length > 0;
 
         rules.forEach((rule, index) => {
             const li = document.createElement("li");
 
-            // Badge de couleur
             const colorBadge = document.createElement("div");
             colorBadge.className = "rule-color-badge";
             colorBadge.style.backgroundColor = rule.color;
 
-            // Infos de la règle
             const infoDiv = document.createElement("div");
             infoDiv.className = "rule-info";
 
             const labelSpan = document.createElement("div");
             labelSpan.className = "rule-label";
-            labelSpan.innerText = rule.label;
+            labelSpan.textContent = rule.label;
 
             const detailsSpan = document.createElement("div");
             detailsSpan.className = "rule-details";
-            detailsSpan.innerText = rule.pattern;
+            detailsSpan.textContent = rule.pattern;
 
             const metaDiv = document.createElement("div");
             metaDiv.className = "rule-meta";
 
             const positionTag = document.createElement("span");
             positionTag.className = "rule-tag";
-            positionTag.innerText = getPositionLabel(rule.position);
+            positionTag.textContent = getPositionLabel(rule.position);
 
             const sizeTag = document.createElement("span");
             sizeTag.className = "rule-tag";
-            sizeTag.innerText = getSizeLabel(rule.size);
+            sizeTag.textContent = getSizeLabel(rule.size);
 
             metaDiv.appendChild(positionTag);
             metaDiv.appendChild(sizeTag);
-
             infoDiv.appendChild(labelSpan);
             infoDiv.appendChild(detailsSpan);
             infoDiv.appendChild(metaDiv);
 
-            // Boutons
             const editBtn = document.createElement("button");
             editBtn.type = "button";
-            editBtn.innerText = "Modifier";
+            editBtn.textContent = "Modifier";
             editBtn.onclick = () => fillForm(rule, index);
 
             const deleteBtn = document.createElement("button");
             deleteBtn.type = "button";
-            deleteBtn.innerText = "Supprimer";
+            deleteBtn.textContent = "Supprimer";
             deleteBtn.onclick = () => {
                 if (confirm(`Supprimer la règle "${rule.label}" ?`)) {
                     rules.splice(index, 1);
-
                     if (editingIndex === index) {
                         resetFormState();
                     } else if (editingIndex !== null && editingIndex > index) {
                         editingIndex -= 1;
                     }
-
                     chrome.storage.sync.set({ rules }, loadRules);
                 }
             };
@@ -147,7 +120,7 @@ const loadRules = () => {
 
 let feedbackTimer: ReturnType<typeof setTimeout> | null = null;
 
-const showFeedback = (message: string, isError = false) => {
+export const showFeedback = (message: string, isError = false) => {
     if (feedbackTimer !== null) {
         clearTimeout(feedbackTimer);
     }
@@ -160,7 +133,7 @@ const showFeedback = (message: string, isError = false) => {
     }, 3000);
 };
 
-const exportRules = () => {
+export const exportRules = () => {
     chrome.storage.sync.get({ rules: [] }, (data) => {
         const json = JSON.stringify(data.rules, null, 2);
         const blob = new Blob([json], { type: "application/json" });
@@ -175,38 +148,12 @@ const exportRules = () => {
     });
 };
 
-const importRules = (file: File) => {
+export const importRules = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
         try {
             const parsed = JSON.parse(e.target?.result as string);
-            if (!Array.isArray(parsed)) throw new Error("Format invalide");
-
-            // Validation stricte de chaque règle
-            const validPositions: RulePosition[] = ["top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"];
-            const validSizes: RuleSize[] = ["small", "medium", "large"];
-            const colorRegex = /^#[0-9A-Fa-f]{6}$/;
-            const rules: Rule[] = parsed.map((r: unknown) => {
-                const rule = r as Record<string, unknown>;
-                if (
-                    typeof rule.pattern !== "string" ||
-                    typeof rule.label !== "string" ||
-                    typeof rule.color !== "string" ||
-                    !validPositions.includes(rule.position as RulePosition) ||
-                    !validSizes.includes(rule.size as RuleSize)
-                ) {
-                    throw new Error("Une ou plusieurs règles sont invalides");
-                }
-                if (!colorRegex.test(rule.color as string)) {
-                    throw new Error(`Couleur invalide "${rule.color}" : le format attendu est #RRGGBB`);
-                }
-                try {
-                    new RegExp(rule.pattern as string);
-                } catch {
-                    throw new Error(`Expression régulière invalide : "${rule.pattern}"`);
-                }
-                return rule as unknown as Rule;
-            });
+            const rules = validateImportedRules(parsed);
 
             chrome.storage.sync.set({ rules }, () => {
                 if (chrome.runtime.lastError) {
@@ -258,11 +205,15 @@ cancelEditBtn.addEventListener("click", () => {
 
 exportBtn.addEventListener("click", exportRules);
 
+importBtn.addEventListener("click", () => {
+    importFile.click();
+});
+
 importFile.addEventListener("change", () => {
     const file = importFile.files?.[0];
     if (file) {
         importRules(file);
-        importFile.value = ""; // reset pour permettre re-import du même fichier
+        importFile.value = "";
     }
 });
 
