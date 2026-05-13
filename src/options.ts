@@ -1,5 +1,5 @@
-import {Rule, RulePosition, RuleSize} from "./types";
-import { getPositionLabel, getSizeLabel, validateImportedRules } from "./utils";
+import { Rule, RulePosition, RuleSize } from "./types";
+import { validateImportedRules } from "./utils";
 
 const form = document.getElementById("ruleForm") as HTMLFormElement;
 const formSection = document.querySelector(".form-section") as HTMLElement;
@@ -14,6 +14,8 @@ const importBtn = document.getElementById("importBtn") as HTMLButtonElement;
 const importFile = document.getElementById("importFile") as HTMLInputElement;
 const importFeedback = document.getElementById("importFeedback") as HTMLSpanElement;
 const themeToggle = document.getElementById("themeToggle") as HTMLButtonElement;
+
+// ─── Theme ───────────────────────────────────────────────────────────────────
 
 const applyTheme = (theme: "light" | "dark") => {
     if (theme === "dark") {
@@ -32,19 +34,65 @@ themeToggle?.addEventListener("click", () => {
     applyTheme(isDark ? "light" : "dark");
 });
 
+// ─── i18n ────────────────────────────────────────────────────────────────────
+
+const t = (key: string, substitutions?: string | string[]): string =>
+    chrome.i18n.getMessage(key, substitutions) || key;
+
+const createSvgIcon = (innerHtml: string): SVGElement => {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", "14");
+    svg.setAttribute("height", "14");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2");
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    svg.setAttribute("aria-hidden", "true");
+    svg.innerHTML = innerHtml;
+    return svg;
+};
+
+const POSITION_KEYS: Record<RulePosition, string> = {
+    top:           "positionTop",
+    bottom:        "positionBottom",
+    "top-left":    "positionTopLeft",
+    "top-right":   "positionTopRight",
+    "bottom-left": "positionBottomLeft",
+    "bottom-right":"positionBottomRight",
+};
+
+const SIZE_KEYS: Record<RuleSize, string> = {
+    small:  "sizeSmall",
+    medium: "sizeMedium",
+    large:  "sizeLarge",
+};
+
+const applyTranslations = () => {
+    document.title = t("pageTitle");
+
+    if (themeToggle) {
+        themeToggle.title = t("themeToggleTitle");
+        themeToggle.setAttribute("aria-label", t("themeToggleAriaLabel"));
+    }
+
+    document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
+        const msg = t(el.getAttribute("data-i18n")!);
+        if (msg) el.textContent = msg;
+    });
+};
+
+// ─── Form mode ───────────────────────────────────────────────────────────────
+
 let editingIndex: number | null = null;
 
 export const setFormMode = (mode: "create" | "edit") => {
     const isEdit = mode === "edit";
-    submitRuleBtn.textContent = isEdit ? "Enregistrer" : "Ajouter";
+    submitRuleBtn.textContent = t(isEdit ? "btnSave" : "btnAdd");
     cancelEditBtn.hidden = !isEdit;
-    formTitle.textContent = isEdit ? "Modifier la règle" : "Nouvelle règle";
-
-    if (isEdit) {
-        formSection.classList.add("editing");
-    } else {
-        formSection.classList.remove("editing");
-    }
+    formTitle.textContent = t(isEdit ? "formTitleEdit" : "formTitleNew");
+    formSection.classList.toggle("editing", isEdit);
 };
 
 const resetFormState = () => {
@@ -63,6 +111,8 @@ const fillForm = (rule: Rule, index: number) => {
     setFormMode("edit");
     formSection.scrollIntoView({ behavior: "smooth", block: "start" });
 };
+
+// ─── Rules ───────────────────────────────────────────────────────────────────
 
 export const loadRules = () => {
     chrome.storage.sync.get({ rules: [] }, (data) => {
@@ -95,11 +145,11 @@ export const loadRules = () => {
 
             const positionTag = document.createElement("span");
             positionTag.className = "rule-tag";
-            positionTag.textContent = getPositionLabel(rule.position);
+            positionTag.textContent = t(POSITION_KEYS[rule.position]);
 
             const sizeTag = document.createElement("span");
             sizeTag.className = "rule-tag";
-            sizeTag.textContent = getSizeLabel(rule.size);
+            sizeTag.textContent = t(SIZE_KEYS[rule.size]);
 
             metaDiv.appendChild(positionTag);
             metaDiv.appendChild(sizeTag);
@@ -110,15 +160,23 @@ export const loadRules = () => {
             const editBtn = document.createElement("button");
             editBtn.type = "button";
             editBtn.className = "btn btn-outline";
-            editBtn.textContent = "Modifier";
+            editBtn.appendChild(createSvgIcon(
+                '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>' +
+                '<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'
+            ));
+            editBtn.append(t("btnEdit"));
             editBtn.onclick = () => fillForm(rule, index);
 
             const deleteBtn = document.createElement("button");
             deleteBtn.type = "button";
             deleteBtn.className = "btn btn-danger";
-            deleteBtn.textContent = "Supprimer";
+            deleteBtn.appendChild(createSvgIcon(
+                '<polyline points="3 6 5 6 21 6"/>' +
+                '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>'
+            ));
+            deleteBtn.append(t("btnDelete"));
             deleteBtn.onclick = () => {
-                if (confirm(`Supprimer la règle "${rule.label}" ?`)) {
+                if (confirm(t("confirmDelete", [rule.label]))) {
                     rules.splice(index, 1);
                     if (editingIndex === index) {
                         resetFormState();
@@ -138,6 +196,8 @@ export const loadRules = () => {
     });
 };
 
+// ─── Feedback ────────────────────────────────────────────────────────────────
+
 let feedbackTimer: ReturnType<typeof setTimeout> | null = null;
 
 export const showFeedback = (message: string, isError = false) => {
@@ -152,6 +212,8 @@ export const showFeedback = (message: string, isError = false) => {
         feedbackTimer = null;
     }, 3000);
 };
+
+// ─── Export / Import ─────────────────────────────────────────────────────────
 
 export const exportRules = () => {
     chrome.storage.sync.get({ rules: [] }, (data) => {
@@ -177,21 +239,23 @@ export const importRules = (file: File) => {
 
             chrome.storage.sync.set({ rules }, () => {
                 if (chrome.runtime.lastError) {
-                    showFeedback(`❌ Erreur lors de la sauvegarde : ${chrome.runtime.lastError.message}`, true);
+                    showFeedback(t("saveError", [chrome.runtime.lastError.message!]), true);
                     return;
                 }
-                showFeedback(`✅ ${rules.length} règle(s) importée(s) avec succès`);
+                showFeedback(t("importSuccess", [rules.length.toString()]));
                 loadRules();
             });
         } catch (err) {
-            showFeedback(`❌ Erreur : ${(err as Error).message}`, true);
+            showFeedback(t("importError", [(err as Error).message]), true);
         }
     };
     reader.onerror = () => {
-        showFeedback("❌ Erreur lors de la lecture du fichier d'import.", true);
+        showFeedback(t("importReadError"), true);
     };
     reader.readAsText(file);
 };
+
+// ─── Event listeners ─────────────────────────────────────────────────────────
 
 form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -237,5 +301,8 @@ importFile.addEventListener("change", () => {
     }
 });
 
+// ─── Init ────────────────────────────────────────────────────────────────────
+
+applyTranslations();
 setFormMode("create");
 loadRules();

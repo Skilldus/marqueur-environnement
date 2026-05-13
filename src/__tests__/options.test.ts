@@ -68,7 +68,8 @@ describe("Options page", () => {
                         set: vi.fn()
                     }
                 },
-                runtime: { lastError: undefined }
+                runtime: { lastError: undefined },
+                i18n: { getMessage: vi.fn((key: string) => key) }
             } as any;
             optionsModule = await import("../options");
             optionsModule.setFormMode("create");
@@ -76,7 +77,7 @@ describe("Options page", () => {
 
         it("met le bouton de soumission en mode 'Ajouter' par défaut", () => {
             const btn = document.getElementById("submitRule") as HTMLButtonElement;
-            expect(btn.textContent).toBe("Ajouter");
+            expect(btn.textContent).toBe("btnAdd");
         });
 
         it("masque le bouton Annuler par défaut", () => {
@@ -84,9 +85,9 @@ describe("Options page", () => {
             expect(btn.hidden).toBe(true);
         });
 
-        it("affiche le titre 'Ajouter une règle' par défaut", () => {
+        it("affiche le titre 'Nouvelle règle' par défaut", () => {
             const title = document.getElementById("formTitle") as HTMLHeadingElement;
-            expect(title.textContent).toBe("Nouvelle règle");
+            expect(title.textContent).toBe("formTitleNew");
         });
 
         it("affiche un compteur à 0 quand le storage est vide", () => {
@@ -111,9 +112,9 @@ describe("Options page", () => {
             const cancelBtn = document.getElementById("cancelEdit") as HTMLButtonElement;
             const title = document.getElementById("formTitle") as HTMLHeadingElement;
 
-            expect(submitBtn.textContent).toBe("Enregistrer");
+            expect(submitBtn.textContent).toBe("btnSave");
             expect(cancelBtn.hidden).toBe(false);
-            expect(title.textContent).toBe("Modifier la règle");
+            expect(title.textContent).toBe("formTitleEdit");
         });
 
         it("passe en mode 'edit' : ajoute la classe CSS 'editing' sur .form-section", () => {
@@ -129,9 +130,9 @@ describe("Options page", () => {
             const cancelBtn = document.getElementById("cancelEdit") as HTMLButtonElement;
             const title = document.getElementById("formTitle") as HTMLHeadingElement;
 
-            expect(submitBtn.textContent).toBe("Ajouter");
+            expect(submitBtn.textContent).toBe("btnAdd");
             expect(cancelBtn.hidden).toBe(true);
-            expect(title.textContent).toBe("Nouvelle règle");
+            expect(title.textContent).toBe("formTitleNew");
         });
 
         it("revient en mode 'create' : retire la classe CSS 'editing' de .form-section", () => {
@@ -217,7 +218,8 @@ describe("Options page", () => {
                         set: vi.fn()
                     }
                 },
-                runtime: { lastError: undefined }
+                runtime: { lastError: undefined },
+                i18n: { getMessage: vi.fn((key: string) => key) }
             } as any;
             optionsModule = await import("../options");
             optionsModule.setFormMode("create");

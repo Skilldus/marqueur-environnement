@@ -17,10 +17,10 @@
     <section class="card">
         <header class="page-header">
             <div>
-                <h1>Configuration des environnements</h1>
-                <p class="subtitle">Ajoutez et gérez les règles d'affichage des bandeaux.</p>
+                <h1 data-i18n="heading">Configuration des environnements</h1>
+                <p class="subtitle" data-i18n="subtitle">Ajoutez et gérez les règles d'affichage des bandeaux.</p>
             </div>
-            <button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème" title="Changer le thème">
+            <button class="theme-toggle" id="themeToggle">
                 <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
                     <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
@@ -37,51 +37,51 @@
             <p class="section-label" id="formTitle">Nouvelle règle</p>
             <form id="ruleForm" class="rule-form">
                 <div class="field">
-                    <label for="pattern">Regex</label>
+                    <label for="pattern" data-i18n="fieldRegex">Regex</label>
                     <input id="pattern" placeholder=".*dev.*" required />
                 </div>
 
                 <div class="field">
-                    <label for="label">Label</label>
+                    <label for="label" data-i18n="fieldLabel">Label</label>
                     <input id="label" placeholder="DEV" required />
                 </div>
 
                 <div class="field">
-                    <label for="color">Couleur</label>
+                    <label for="color" data-i18n="fieldColor">Couleur</label>
                     <input type="color" id="color" value="#e53935" />
                 </div>
 
                 <div class="field">
-                    <label for="position">Position</label>
+                    <label for="position" data-i18n="fieldPosition">Position</label>
                     <select id="position">
-                        <option value="top">Bandeau haut</option>
-                        <option value="bottom">Bandeau bas</option>
-                        <option value="top-left">Coin haut gauche</option>
-                        <option value="top-right">Coin haut droite</option>
-                        <option value="bottom-left">Coin bas gauche</option>
-                        <option value="bottom-right">Coin bas droite</option>
+                        <option value="top"          data-i18n="positionTop">Bandeau haut</option>
+                        <option value="bottom"       data-i18n="positionBottom">Bandeau bas</option>
+                        <option value="top-left"     data-i18n="positionTopLeft">Coin haut gauche</option>
+                        <option value="top-right"    data-i18n="positionTopRight">Coin haut droite</option>
+                        <option value="bottom-left"  data-i18n="positionBottomLeft">Coin bas gauche</option>
+                        <option value="bottom-right" data-i18n="positionBottomRight">Coin bas droite</option>
                     </select>
                 </div>
 
                 <div class="field">
-                    <label for="size">Taille</label>
+                    <label for="size" data-i18n="fieldSize">Taille</label>
                     <select id="size">
-                        <option value="small">Petite</option>
-                        <option value="medium" selected>Moyenne</option>
-                        <option value="large">Grande</option>
+                        <option value="small"  data-i18n="sizeSmall">Petite</option>
+                        <option value="medium" data-i18n="sizeMedium" selected>Moyenne</option>
+                        <option value="large"  data-i18n="sizeLarge">Grande</option>
                     </select>
                 </div>
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary" id="submitRule">Ajouter</button>
-                    <button type="button" class="btn btn-secondary" id="cancelEdit" hidden>Annuler</button>
+                    <button type="button" class="btn btn-secondary" id="cancelEdit" hidden data-i18n="btnCancel">Annuler</button>
                 </div>
             </form>
         </div>
 
         <div class="io-section">
-            <button type="button" class="btn btn-outline" id="exportBtn">Exporter</button>
-            <button type="button" class="btn btn-outline" id="importBtn">Importer</button>
+            <button type="button" class="btn btn-outline" id="exportBtn" data-i18n="btnExport">Exporter</button>
+            <button type="button" class="btn btn-outline" id="importBtn" data-i18n="btnImport">Importer</button>
             <input type="file" id="importFile" accept=".json" hidden />
             <span id="importFeedback" class="import-feedback" hidden></span>
         </div>
@@ -89,9 +89,11 @@
         <div class="divider"></div>
 
         <div class="rules-section">
-            <p class="section-label">Règles configurées (<span id="rulesCount">0</span>)</p>
+            <p class="section-label">
+                <span data-i18n="sectionRulesTitle">Règles configurées</span> (<span id="rulesCount">0</span>)
+            </p>
             <ul id="rules" class="rules-list"></ul>
-            <p id="emptyState" class="empty-state" hidden>Aucune règle configurée.</p>
+            <p id="emptyState" class="empty-state" hidden data-i18n="emptyState">Aucune règle configurée.</p>
         </div>
     </section>
 </main>

@@ -24,6 +24,9 @@ vi.stubGlobal("chrome", {
     runtime: {
         lastError: undefined as chrome.runtime.LastError | undefined,
     },
+    i18n: {
+        getMessage: vi.fn((key: string) => key),
+    },
 });
 
 // Mock de URL.createObjectURL / revokeObjectURL (non dispo dans jsdom)
