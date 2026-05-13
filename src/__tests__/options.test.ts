@@ -86,7 +86,7 @@ describe("Options page", () => {
 
         it("affiche le titre 'Ajouter une règle' par défaut", () => {
             const title = document.getElementById("formTitle") as HTMLHeadingElement;
-            expect(title.textContent).toBe("Ajouter une règle");
+            expect(title.textContent).toBe("Nouvelle règle");
         });
 
         it("affiche un compteur à 0 quand le storage est vide", () => {
@@ -131,7 +131,7 @@ describe("Options page", () => {
 
             expect(submitBtn.textContent).toBe("Ajouter");
             expect(cancelBtn.hidden).toBe(true);
-            expect(title.textContent).toBe("Ajouter une règle");
+            expect(title.textContent).toBe("Nouvelle règle");
         });
 
         it("revient en mode 'create' : retire la classe CSS 'editing' de .form-section", () => {

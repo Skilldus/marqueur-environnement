@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "package": "yarn build && yarn zip",
-    "zip": "cd dist && powershell Compress-Archive -Path * -DestinationPath ../extension.zip -Force",
+    "zip": "pwsh -NoProfile -Command \"Compress-Archive -Force -Path dist\\* -DestinationPath extension.zip\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"

@@ -3,7 +3,7 @@ import { getPositionLabel, getSizeLabel, validateImportedRules } from "./utils";
 
 const form = document.getElementById("ruleForm") as HTMLFormElement;
 const formSection = document.querySelector(".form-section") as HTMLElement;
-const formTitle = document.getElementById("formTitle") as HTMLHeadingElement;
+const formTitle = document.getElementById("formTitle") as HTMLElement;
 const rulesList = document.getElementById("rules") as HTMLUListElement;
 const rulesCount = document.getElementById("rulesCount") as HTMLSpanElement;
 const emptyState = document.getElementById("emptyState") as HTMLParagraphElement;
@@ -13,6 +13,24 @@ const exportBtn = document.getElementById("exportBtn") as HTMLButtonElement;
 const importBtn = document.getElementById("importBtn") as HTMLButtonElement;
 const importFile = document.getElementById("importFile") as HTMLInputElement;
 const importFeedback = document.getElementById("importFeedback") as HTMLSpanElement;
+const themeToggle = document.getElementById("themeToggle") as HTMLButtonElement;
+
+const applyTheme = (theme: "light" | "dark") => {
+    if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+        document.documentElement.removeAttribute("data-theme");
+    }
+    localStorage.setItem("theme", theme);
+};
+
+const savedTheme = (localStorage.getItem("theme") as "light" | "dark" | null) ?? "light";
+applyTheme(savedTheme);
+
+themeToggle?.addEventListener("click", () => {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    applyTheme(isDark ? "light" : "dark");
+});
 
 let editingIndex: number | null = null;
 
@@ -20,7 +38,7 @@ export const setFormMode = (mode: "create" | "edit") => {
     const isEdit = mode === "edit";
     submitRuleBtn.textContent = isEdit ? "Enregistrer" : "Ajouter";
     cancelEditBtn.hidden = !isEdit;
-    formTitle.textContent = isEdit ? "Modifier la règle" : "Ajouter une règle";
+    formTitle.textContent = isEdit ? "Modifier la règle" : "Nouvelle règle";
 
     if (isEdit) {
         formSection.classList.add("editing");
@@ -91,11 +109,13 @@ export const loadRules = () => {
 
             const editBtn = document.createElement("button");
             editBtn.type = "button";
+            editBtn.className = "btn btn-outline";
             editBtn.textContent = "Modifier";
             editBtn.onclick = () => fillForm(rule, index);
 
             const deleteBtn = document.createElement("button");
             deleteBtn.type = "button";
+            deleteBtn.className = "btn btn-danger";
             deleteBtn.textContent = "Supprimer";
             deleteBtn.onclick = () => {
                 if (confirm(`Supprimer la règle "${rule.label}" ?`)) {
