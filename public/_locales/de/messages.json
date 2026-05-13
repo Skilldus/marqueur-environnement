@@ -1,0 +1,51 @@
+{
+    "appName":              { "message": "Umgebungsindikator" },
+    "appDescription":       { "message": "Zeigt ein Banner auf Seiten an, die konfigurierbaren URL-Regex-Regeln entsprechen." },
+    "pageTitle":            { "message": "Einstellungen" },
+    "heading":              { "message": "Umgebungseinstellungen" },
+    "subtitle":             { "message": "Banner-Anzeigeregeln hinzufügen und verwalten." },
+    "formTitleNew":         { "message": "Neue Regel" },
+    "formTitleEdit":        { "message": "Regel bearbeiten" },
+    "fieldRegex":           { "message": "Regex" },
+    "fieldLabel":           { "message": "Bezeichnung" },
+    "fieldColor":           { "message": "Farbe" },
+    "fieldPosition":        { "message": "Position" },
+    "fieldSize":            { "message": "Größe" },
+    "positionTop":          { "message": "Oberes Banner" },
+    "positionBottom":       { "message": "Unteres Banner" },
+    "positionTopLeft":      { "message": "Oben links" },
+    "positionTopRight":     { "message": "Oben rechts" },
+    "positionBottomLeft":   { "message": "Unten links" },
+    "positionBottomRight":  { "message": "Unten rechts" },
+    "sizeSmall":            { "message": "Klein" },
+    "sizeMedium":           { "message": "Mittel" },
+    "sizeLarge":            { "message": "Groß" },
+    "btnAdd":               { "message": "Hinzufügen" },
+    "btnSave":              { "message": "Speichern" },
+    "btnCancel":            { "message": "Abbrechen" },
+    "btnExport":            { "message": "Exportieren" },
+    "btnImport":            { "message": "Importieren" },
+    "btnEdit":              { "message": "Bearbeiten" },
+    "btnDelete":            { "message": "Löschen" },
+    "themeToggleTitle":     { "message": "Design wechseln" },
+    "themeToggleAriaLabel": { "message": "Design umschalten" },
+    "sectionRulesTitle":    { "message": "Konfigurierte Regeln" },
+    "emptyState":           { "message": "Keine Regeln konfiguriert." },
+    "confirmDelete": {
+        "message": "Regel \"$LABEL$\" löschen?",
+        "placeholders": { "label": { "content": "$1" } }
+    },
+    "importSuccess": {
+        "message": "✅ $COUNT$ Regel(n) erfolgreich importiert",
+        "placeholders": { "count": { "content": "$1" } }
+    },
+    "importError": {
+        "message": "❌ Fehler: $MESSAGE$",
+        "placeholders": { "message": { "content": "$1" } }
+    },
+    "importReadError": { "message": "❌ Fehler beim Lesen der Importdatei." },
+    "saveError": {
+        "message": "❌ Speicherfehler: $MESSAGE$",
+        "placeholders": { "message": { "content": "$1" } }
+    }
+}

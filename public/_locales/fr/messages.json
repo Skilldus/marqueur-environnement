@@ -1,0 +1,51 @@
+{
+    "appName":              { "message": "Indicateur d'Environnement" },
+    "appDescription":       { "message": "Affiche un bandeau selon des regex d'URL configurables." },
+    "pageTitle":            { "message": "Configuration" },
+    "heading":              { "message": "Configuration des environnements" },
+    "subtitle":             { "message": "Ajoutez et gérez les règles d'affichage des bandeaux." },
+    "formTitleNew":         { "message": "Nouvelle règle" },
+    "formTitleEdit":        { "message": "Modifier la règle" },
+    "fieldRegex":           { "message": "Regex" },
+    "fieldLabel":           { "message": "Label" },
+    "fieldColor":           { "message": "Couleur" },
+    "fieldPosition":        { "message": "Position" },
+    "fieldSize":            { "message": "Taille" },
+    "positionTop":          { "message": "Bandeau haut" },
+    "positionBottom":       { "message": "Bandeau bas" },
+    "positionTopLeft":      { "message": "Coin haut gauche" },
+    "positionTopRight":     { "message": "Coin haut droite" },
+    "positionBottomLeft":   { "message": "Coin bas gauche" },
+    "positionBottomRight":  { "message": "Coin bas droite" },
+    "sizeSmall":            { "message": "Petite" },
+    "sizeMedium":           { "message": "Moyenne" },
+    "sizeLarge":            { "message": "Grande" },
+    "btnAdd":               { "message": "Ajouter" },
+    "btnSave":              { "message": "Enregistrer" },
+    "btnCancel":            { "message": "Annuler" },
+    "btnExport":            { "message": "Exporter" },
+    "btnImport":            { "message": "Importer" },
+    "btnEdit":              { "message": "Modifier" },
+    "btnDelete":            { "message": "Supprimer" },
+    "themeToggleTitle":     { "message": "Changer le thème" },
+    "themeToggleAriaLabel": { "message": "Basculer le thème" },
+    "sectionRulesTitle":    { "message": "Règles configurées" },
+    "emptyState":           { "message": "Aucune règle configurée." },
+    "confirmDelete": {
+        "message": "Supprimer la règle \"$LABEL$\" ?",
+        "placeholders": { "label": { "content": "$1" } }
+    },
+    "importSuccess": {
+        "message": "✅ $COUNT$ règle(s) importée(s) avec succès",
+        "placeholders": { "count": { "content": "$1" } }
+    },
+    "importError": {
+        "message": "❌ Erreur : $MESSAGE$",
+        "placeholders": { "message": { "content": "$1" } }
+    },
+    "importReadError": { "message": "❌ Erreur lors de la lecture du fichier d'import." },
+    "saveError": {
+        "message": "❌ Erreur lors de la sauvegarde : $MESSAGE$",
+        "placeholders": { "message": { "content": "$1" } }
+    }
+}

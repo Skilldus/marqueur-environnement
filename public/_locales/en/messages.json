@@ -1,0 +1,51 @@
+{
+    "appName":              { "message": "Environment Indicator" },
+    "appDescription":       { "message": "Displays a banner on pages matching configurable URL regex rules." },
+    "pageTitle":            { "message": "Settings" },
+    "heading":              { "message": "Environment Settings" },
+    "subtitle":             { "message": "Add and manage banner display rules." },
+    "formTitleNew":         { "message": "New rule" },
+    "formTitleEdit":        { "message": "Edit rule" },
+    "fieldRegex":           { "message": "Regex" },
+    "fieldLabel":           { "message": "Label" },
+    "fieldColor":           { "message": "Color" },
+    "fieldPosition":        { "message": "Position" },
+    "fieldSize":            { "message": "Size" },
+    "positionTop":          { "message": "Top banner" },
+    "positionBottom":       { "message": "Bottom banner" },
+    "positionTopLeft":      { "message": "Top left corner" },
+    "positionTopRight":     { "message": "Top right corner" },
+    "positionBottomLeft":   { "message": "Bottom left corner" },
+    "positionBottomRight":  { "message": "Bottom right corner" },
+    "sizeSmall":            { "message": "Small" },
+    "sizeMedium":           { "message": "Medium" },
+    "sizeLarge":            { "message": "Large" },
+    "btnAdd":               { "message": "Add" },
+    "btnSave":              { "message": "Save" },
+    "btnCancel":            { "message": "Cancel" },
+    "btnExport":            { "message": "Export" },
+    "btnImport":            { "message": "Import" },
+    "btnEdit":              { "message": "Edit" },
+    "btnDelete":            { "message": "Delete" },
+    "themeToggleTitle":     { "message": "Toggle theme" },
+    "themeToggleAriaLabel": { "message": "Toggle theme" },
+    "sectionRulesTitle":    { "message": "Configured rules" },
+    "emptyState":           { "message": "No rules configured." },
+    "confirmDelete": {
+        "message": "Delete rule \"$LABEL$\"?",
+        "placeholders": { "label": { "content": "$1" } }
+    },
+    "importSuccess": {
+        "message": "✅ $COUNT$ rule(s) imported successfully",
+        "placeholders": { "count": { "content": "$1" } }
+    },
+    "importError": {
+        "message": "❌ Error: $MESSAGE$",
+        "placeholders": { "message": { "content": "$1" } }
+    },
+    "importReadError": { "message": "❌ Error reading import file." },
+    "saveError": {
+        "message": "❌ Save error: $MESSAGE$",
+        "placeholders": { "message": { "content": "$1" } }
+    }
+}
