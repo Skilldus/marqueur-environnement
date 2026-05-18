@@ -139,6 +139,7 @@ export const loadRules = () => {
             const detailsSpan = document.createElement("div");
             detailsSpan.className = "rule-details";
             detailsSpan.textContent = rule.pattern;
+            detailsSpan.title = rule.pattern;
 
             const metaDiv = document.createElement("div");
             metaDiv.className = "rule-meta";
