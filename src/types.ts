@@ -6,7 +6,7 @@ export type RulePosition =
     | "bottom-left"
     | "bottom-right";
 
-export type RuleSize = "small" | "medium" | "large";
+export type RuleSize = "small" | "medium" | "large" | "custom";
 
 export interface Rule {
     pattern: string;  // regex en string
@@ -14,4 +14,5 @@ export interface Rule {
     color: string;    // #hex
     position: RulePosition;
     size: RuleSize;
+    customSize?: { height: number; fontSize: number };
 }

@@ -135,6 +135,10 @@ describe("getSizeLabel", () => {
     it("retourne 'Grande' pour 'large'", () => {
         expect(getSizeLabel("large")).toBe("Grande");
     });
+
+    it("retourne 'Personnalisée' pour 'custom'", () => {
+        expect(getSizeLabel("custom")).toBe("Personnalisée");
+    });
 });
 
 // ─── validateImportedRules ───────────────────────────────────────────────────
@@ -264,6 +268,30 @@ describe("validateImportedRules", () => {
         for (const size of sizes) {
             expect(() => validateImportedRules([{ ...validRule, size }])).not.toThrow();
         }
+    });
+
+    it("accepte une règle custom avec customSize valide", () => {
+        expect(() =>
+            validateImportedRules([{ ...validRule, size: "custom", customSize: { height: 28, fontSize: 16 } }])
+        ).not.toThrow();
+    });
+
+    it("lève une erreur pour size 'custom' sans customSize", () => {
+        expect(() =>
+            validateImportedRules([{ ...validRule, size: "custom" }])
+        ).toThrow("Taille personnalisée invalide");
+    });
+
+    it("lève une erreur pour customSize avec height hors limites", () => {
+        expect(() =>
+            validateImportedRules([{ ...validRule, size: "custom", customSize: { height: 5, fontSize: 16 } }])
+        ).toThrow("Taille personnalisée invalide");
+    });
+
+    it("lève une erreur pour customSize avec fontSize hors limites", () => {
+        expect(() =>
+            validateImportedRules([{ ...validRule, size: "custom", customSize: { height: 28, fontSize: 200 } }])
+        ).toThrow("Taille personnalisée invalide");
     });
 
     it("s'arrête à la première règle invalide dans le tableau", () => {

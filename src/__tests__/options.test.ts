@@ -23,7 +23,13 @@ const OPTIONS_HTML = `
             <option value="small">Petite</option>
             <option value="medium" selected>Moyenne</option>
             <option value="large">Grande</option>
+            <option value="custom">Personnalisée</option>
         </select>
+        <div id="customSizePanel" hidden>
+            <input type="number" id="customHeight" value="28" />
+            <input type="number" id="customFontSize" value="16" />
+            <div id="previewBanner"><span id="previewText"></span></div>
+        </div>
         <button type="submit" id="submitRule">Ajouter</button>
         <button type="button" id="cancelEdit" hidden>Annuler</button>
     </form>

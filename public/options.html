@@ -69,7 +69,29 @@
                         <option value="small"  data-i18n="sizeSmall">Petite</option>
                         <option value="medium" data-i18n="sizeMedium" selected>Moyenne</option>
                         <option value="large"  data-i18n="sizeLarge">Grande</option>
+                        <option value="custom" data-i18n="sizeCustom">Personnalisée</option>
                     </select>
+                </div>
+
+                <div id="customSizePanel" class="custom-size-panel" hidden>
+                    <div class="custom-size-row">
+                        <div class="field">
+                            <label for="customHeight" data-i18n="fieldCustomHeight">Hauteur (px)</label>
+                            <input type="number" id="customHeight" min="10" max="200" value="28" />
+                        </div>
+                        <div class="field">
+                            <label for="customFontSize" data-i18n="fieldCustomFontSize">Taille texte (px)</label>
+                            <input type="number" id="customFontSize" min="8" max="100" value="16" />
+                        </div>
+                    </div>
+                    <div class="preview-wrap">
+                        <span class="preview-label-text" data-i18n="previewLabel">Aperçu</span>
+                        <div class="preview-viewport">
+                            <div id="previewBanner" class="preview-banner">
+                                <span id="previewText"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-actions">

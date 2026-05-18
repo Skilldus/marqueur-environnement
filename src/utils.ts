@@ -46,6 +46,7 @@ export const getSizeLabel = (size: RuleSize): string => {
         small: "Petite",
         medium: "Moyenne",
         large: "Grande",
+        custom: "Personnalisée",
     };
     return labels[size];
 };
@@ -65,7 +66,7 @@ export const validateImportedRules = (data: unknown): Rule[] => {
         "bottom-left",
         "bottom-right",
     ];
-    const validSizes: RuleSize[] = ["small", "medium", "large"];
+    const validSizes: RuleSize[] = ["small", "medium", "large", "custom"];
     const colorRegex = /^#[0-9A-Fa-f]{6}$/;
 
     return data.map((r: unknown) => {
@@ -93,6 +94,17 @@ export const validateImportedRules = (data: unknown): Rule[] => {
             throw new Error(
                 `Expression régulière invalide : "${rule.pattern}"`
             );
+        }
+
+        if (rule.size === "custom") {
+            const cs = rule.customSize as { height?: unknown; fontSize?: unknown } | undefined;
+            if (
+                !cs ||
+                typeof cs.height !== "number" || cs.height < 10 || cs.height > 200 ||
+                typeof cs.fontSize !== "number" || cs.fontSize < 8 || cs.fontSize > 100
+            ) {
+                throw new Error("Taille personnalisée invalide");
+            }
         }
 
         return rule as unknown as Rule;

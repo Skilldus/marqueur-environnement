@@ -45,6 +45,31 @@ export const injectBanner = (rule: Rule) => {
     banner.className = "env-banner";
     banner.style.color = getContrastTextColor(rule.color);
 
+    if (rule.size === "custom" && rule.customSize) {
+        const { height, fontSize } = rule.customSize;
+        if (isHorizontal) {
+            banner.style.minHeight = `${height}px`;
+            banner.style.fontSize = `${fontSize}px`;
+            banner.style.padding = "0";
+            banner.style.lineHeight = `${height}px`;
+        } else {
+            const w = Math.round(height * 3.667 + 93);
+            const sideOff = Math.round(-height - 18);
+            const cornerOff = Math.round((height * 2) / 3 + 25 / 3);
+            const margin = Math.round((17 * height + 460) / 30);
+            wrapper.style.width = `${w}px`;
+            wrapper.style.height = `${height}px`;
+            if (rule.position.includes("left")) wrapper.style.left = `${sideOff}px`;
+            else wrapper.style.right = `${sideOff}px`;
+            if (rule.position.startsWith("top")) wrapper.style.top = `${cornerOff}px`;
+            else wrapper.style.bottom = `${cornerOff}px`;
+            banner.style.lineHeight = `${height}px`;
+            banner.style.margin = `0 ${margin}px`;
+            banner.style.width = `calc(100% - ${2 * margin}px)`;
+            banner.style.fontSize = `${fontSize}px`;
+        }
+    }
+
     const label = document.createElement("span");
     label.textContent = rule.label;
     banner.appendChild(label);

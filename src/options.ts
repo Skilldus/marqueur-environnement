@@ -1,5 +1,5 @@
 import { Rule, RulePosition, RuleSize } from "./types";
-import { validateImportedRules } from "./utils";
+import { validateImportedRules, getContrastTextColor } from "./utils";
 
 const form = document.getElementById("ruleForm") as HTMLFormElement;
 const formSection = document.querySelector(".form-section") as HTMLElement;
@@ -14,6 +14,7 @@ const importBtn = document.getElementById("importBtn") as HTMLButtonElement;
 const importFile = document.getElementById("importFile") as HTMLInputElement;
 const importFeedback = document.getElementById("importFeedback") as HTMLSpanElement;
 const themeToggle = document.getElementById("themeToggle") as HTMLButtonElement;
+const customSizePanel = document.getElementById("customSizePanel") as HTMLElement;
 
 // ─── Theme ───────────────────────────────────────────────────────────────────
 
@@ -67,6 +68,7 @@ const SIZE_KEYS: Record<RuleSize, string> = {
     small:  "sizeSmall",
     medium: "sizeMedium",
     large:  "sizeLarge",
+    custom: "sizeCustom",
 };
 
 const applyTranslations = () => {
@@ -81,6 +83,30 @@ const applyTranslations = () => {
         const msg = t(el.getAttribute("data-i18n")!);
         if (msg) el.textContent = msg;
     });
+};
+
+// ─── Custom size preview ──────────────────────────────────────────────────────
+
+const updatePreview = () => {
+    const color = (document.getElementById("color") as HTMLInputElement).value;
+    const rawLabel = (document.getElementById("label") as HTMLInputElement).value;
+    const height = Math.max(10, parseInt((document.getElementById("customHeight") as HTMLInputElement).value, 10) || 28);
+    const fontSize = Math.max(8, parseInt((document.getElementById("customFontSize") as HTMLInputElement).value, 10) || 16);
+
+    const banner = document.getElementById("previewBanner") as HTMLElement;
+    const text = document.getElementById("previewText") as HTMLElement;
+    banner.style.backgroundColor = color;
+    banner.style.color = getContrastTextColor(color);
+    banner.style.minHeight = `${height}px`;
+    banner.style.lineHeight = `${height}px`;
+    banner.style.fontSize = `${fontSize}px`;
+    text.textContent = rawLabel.trim() || "LABEL";
+};
+
+const toggleCustomPanel = () => {
+    const isCustom = (document.getElementById("size") as HTMLSelectElement).value === "custom";
+    customSizePanel.hidden = !isCustom;
+    if (isCustom) updatePreview();
 };
 
 // ─── Form mode ───────────────────────────────────────────────────────────────
@@ -98,6 +124,7 @@ export const setFormMode = (mode: "create" | "edit") => {
 const resetFormState = () => {
     editingIndex = null;
     form.reset();
+    customSizePanel.hidden = true;
     setFormMode("create");
 };
 
@@ -107,6 +134,16 @@ const fillForm = (rule: Rule, index: number) => {
     (document.getElementById("color") as HTMLInputElement).value = rule.color;
     (document.getElementById("position") as HTMLSelectElement).value = rule.position;
     (document.getElementById("size") as HTMLSelectElement).value = rule.size;
+
+    if (rule.size === "custom" && rule.customSize) {
+        (document.getElementById("customHeight") as HTMLInputElement).value = rule.customSize.height.toString();
+        (document.getElementById("customFontSize") as HTMLInputElement).value = rule.customSize.fontSize.toString();
+        customSizePanel.hidden = false;
+        updatePreview();
+    } else {
+        customSizePanel.hidden = true;
+    }
+
     editingIndex = index;
     setFormMode("edit");
     formSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -150,7 +187,12 @@ export const loadRules = () => {
 
             const sizeTag = document.createElement("span");
             sizeTag.className = "rule-tag";
-            sizeTag.textContent = t(SIZE_KEYS[rule.size]);
+            if (rule.size === "custom" && rule.customSize) {
+                sizeTag.textContent = `${t("sizeCustom")} · ${rule.customSize.height}×${rule.customSize.fontSize}px`;
+                sizeTag.title = `${t("fieldCustomHeight")}: ${rule.customSize.height}px — ${t("fieldCustomFontSize")}: ${rule.customSize.fontSize}px`;
+            } else {
+                sizeTag.textContent = t(SIZE_KEYS[rule.size]);
+            }
 
             metaDiv.appendChild(positionTag);
             metaDiv.appendChild(sizeTag);
@@ -267,9 +309,14 @@ form.addEventListener("submit", (e) => {
     const position = (document.getElementById("position") as HTMLSelectElement).value as RulePosition;
     const size = (document.getElementById("size") as HTMLSelectElement).value as RuleSize;
 
+    const customSize = size === "custom" ? {
+        height: Math.max(10, parseInt((document.getElementById("customHeight") as HTMLInputElement).value, 10) || 28),
+        fontSize: Math.max(8, parseInt((document.getElementById("customFontSize") as HTMLInputElement).value, 10) || 16),
+    } : undefined;
+
     chrome.storage.sync.get({ rules: [] }, (data) => {
         const rules: Rule[] = data.rules as Rule[];
-        const nextRule: Rule = { pattern, label, color, position, size };
+        const nextRule: Rule = { pattern, label, color, position, size, ...(customSize ? { customSize } : {}) };
 
         if (editingIndex !== null && editingIndex >= 0 && editingIndex < rules.length) {
             rules[editingIndex] = nextRule;
@@ -301,6 +348,12 @@ importFile.addEventListener("change", () => {
         importFile.value = "";
     }
 });
+
+(document.getElementById("size") as HTMLSelectElement).addEventListener("change", toggleCustomPanel);
+(document.getElementById("customHeight") as HTMLInputElement).addEventListener("input", updatePreview);
+(document.getElementById("customFontSize") as HTMLInputElement).addEventListener("input", updatePreview);
+(document.getElementById("color") as HTMLInputElement).addEventListener("input", updatePreview);
+(document.getElementById("label") as HTMLInputElement).addEventListener("input", updatePreview);
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 
