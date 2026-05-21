@@ -298,5 +298,47 @@ describe("validateImportedRules", () => {
         const rules = [validRule, { ...validRule, position: "invalid" }];
         expect(() => validateImportedRules(rules)).toThrow("invalides");
     });
+
+    // --- textColor (optionnel) ---
+
+    it("accepte une règle avec textColor valide", () => {
+        expect(() => validateImportedRules([{ ...validRule, textColor: "#ffffff" }])).not.toThrow();
+    });
+
+    it("accepte une règle sans textColor (champ optionnel)", () => {
+        expect(() => validateImportedRules([validRule])).not.toThrow();
+    });
+
+    it("lève une erreur pour textColor avec format invalide (nom de couleur)", () => {
+        expect(() => validateImportedRules([{ ...validRule, textColor: "white" }])).toThrow("Couleur de texte invalide");
+    });
+
+    it("lève une erreur pour textColor avec hex court (#RGB)", () => {
+        expect(() => validateImportedRules([{ ...validRule, textColor: "#fff" }])).toThrow("Couleur de texte invalide");
+    });
+
+    // --- borderColor (optionnel) ---
+
+    it("accepte une règle avec borderColor valide", () => {
+        expect(() => validateImportedRules([{ ...validRule, borderColor: "#000000" }])).not.toThrow();
+    });
+
+    it("accepte une règle sans borderColor (champ optionnel)", () => {
+        expect(() => validateImportedRules([validRule])).not.toThrow();
+    });
+
+    it("lève une erreur pour borderColor avec format invalide (nom de couleur)", () => {
+        expect(() => validateImportedRules([{ ...validRule, borderColor: "black" }])).toThrow("Couleur de bordure invalide");
+    });
+
+    it("lève une erreur pour borderColor avec hex court (#RGB)", () => {
+        expect(() => validateImportedRules([{ ...validRule, borderColor: "#000" }])).toThrow("Couleur de bordure invalide");
+    });
+
+    it("accepte une règle avec textColor et borderColor valides", () => {
+        expect(() =>
+            validateImportedRules([{ ...validRule, textColor: "#ffffff", borderColor: "#000000" }])
+        ).not.toThrow();
+    });
 });
 

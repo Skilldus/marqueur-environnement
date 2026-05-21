@@ -107,6 +107,22 @@ export const validateImportedRules = (data: unknown): Rule[] => {
             }
         }
 
+        if (rule.textColor !== undefined) {
+            if (typeof rule.textColor !== "string" || !colorRegex.test(rule.textColor as string)) {
+                throw new Error(
+                    `Couleur de texte invalide "${rule.textColor}" : le format attendu est #RRGGBB`
+                );
+            }
+        }
+
+        if (rule.borderColor !== undefined) {
+            if (typeof rule.borderColor !== "string" || !colorRegex.test(rule.borderColor as string)) {
+                throw new Error(
+                    `Couleur de bordure invalide "${rule.borderColor}" : le format attendu est #RRGGBB`
+                );
+            }
+        }
+
         return rule as unknown as Rule;
     });
 };

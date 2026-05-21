@@ -28,6 +28,14 @@ const OPTIONS_HTML = `
         <div id="customSizePanel" hidden>
             <input type="number" id="customHeight" value="28" />
             <input type="number" id="customFontSize" value="16" />
+        </div>
+        <div id="textStylePanel">
+            <input type="checkbox" id="customTextColorEnabled" />
+            <input type="color" id="textColor" value="#ffffff" />
+            <input type="checkbox" id="borderColorEnabled" />
+            <input type="color" id="borderColor" value="#000000" />
+        </div>
+        <div id="previewPanel">
             <div id="previewBanner"><span id="previewText"></span></div>
         </div>
         <button type="submit" id="submitRule">Ajouter</button>

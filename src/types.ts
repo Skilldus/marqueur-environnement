@@ -15,4 +15,6 @@ export interface Rule {
     position: RulePosition;
     size: RuleSize;
     customSize?: { height: number; fontSize: number };
+    textColor?: string;   // undefined = auto WCAG contrast, #hex = custom
+    borderColor?: string; // undefined = no stroke, #hex = text stroke color
 }

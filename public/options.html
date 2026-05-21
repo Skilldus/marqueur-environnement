@@ -84,6 +84,26 @@
                             <input type="number" id="customFontSize" min="8" max="100" value="16" />
                         </div>
                     </div>
+                </div>
+
+                <div id="textStylePanel" class="text-style-panel">
+                    <div class="text-style-row">
+                        <label class="toggle-label" for="customTextColorEnabled">
+                            <input type="checkbox" id="customTextColorEnabled" />
+                            <span data-i18n="fieldTextColor">Couleur du texte</span>
+                        </label>
+                        <input type="color" id="textColor" value="#ffffff" class="inline-color-picker" disabled />
+                    </div>
+                    <div class="text-style-row">
+                        <label class="toggle-label" for="borderColorEnabled">
+                            <input type="checkbox" id="borderColorEnabled" />
+                            <span data-i18n="fieldBorderColor">Bordure du texte</span>
+                        </label>
+                        <input type="color" id="borderColor" value="#000000" class="inline-color-picker" disabled />
+                    </div>
+                </div>
+
+                <div id="previewPanel" class="preview-panel">
                     <div class="preview-wrap">
                         <span class="preview-label-text" data-i18n="previewLabel">Aperçu</span>
                         <div class="preview-viewport">

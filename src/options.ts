@@ -15,6 +15,11 @@ const importFile = document.getElementById("importFile") as HTMLInputElement;
 const importFeedback = document.getElementById("importFeedback") as HTMLSpanElement;
 const themeToggle = document.getElementById("themeToggle") as HTMLButtonElement;
 const customSizePanel = document.getElementById("customSizePanel") as HTMLElement;
+const previewPanel = document.getElementById("previewPanel") as HTMLElement;
+const customTextColorEnabled = document.getElementById("customTextColorEnabled") as HTMLInputElement;
+const borderColorEnabled = document.getElementById("borderColorEnabled") as HTMLInputElement;
+const textColorInput = document.getElementById("textColor") as HTMLInputElement;
+const borderColorInput = document.getElementById("borderColor") as HTMLInputElement;
 
 // ─── Theme ───────────────────────────────────────────────────────────────────
 
@@ -85,18 +90,39 @@ const applyTranslations = () => {
     });
 };
 
-// ─── Custom size preview ──────────────────────────────────────────────────────
+// ─── Preview ──────────────────────────────────────────────────────────────────
+
+const SIZE_DIMENSIONS: Record<string, { height: number; fontSize: number }> = {
+    small:  { height: 24, fontSize: 13 },
+    medium: { height: 28, fontSize: 16 },
+    large:  { height: 36, fontSize: 19 },
+};
+
+const syncAutoTextColor = () => {
+    if (!customTextColorEnabled.checked) {
+        const color = (document.getElementById("color") as HTMLInputElement).value;
+        textColorInput.value = getContrastTextColor(color) === "white" ? "#ffffff" : "#000000";
+    }
+};
 
 const updatePreview = () => {
     const color = (document.getElementById("color") as HTMLInputElement).value;
     const rawLabel = (document.getElementById("label") as HTMLInputElement).value;
-    const height = Math.max(10, parseInt((document.getElementById("customHeight") as HTMLInputElement).value, 10) || 28);
-    const fontSize = Math.max(8, parseInt((document.getElementById("customFontSize") as HTMLInputElement).value, 10) || 16);
+    const size = (document.getElementById("size") as HTMLSelectElement).value;
+
+    let height: number, fontSize: number;
+    if (size === "custom") {
+        height = Math.max(10, parseInt((document.getElementById("customHeight") as HTMLInputElement).value, 10) || 28);
+        fontSize = Math.max(8, parseInt((document.getElementById("customFontSize") as HTMLInputElement).value, 10) || 16);
+    } else {
+        ({ height, fontSize } = SIZE_DIMENSIONS[size] ?? SIZE_DIMENSIONS.medium);
+    }
 
     const banner = document.getElementById("previewBanner") as HTMLElement;
     const text = document.getElementById("previewText") as HTMLElement;
     banner.style.backgroundColor = color;
-    banner.style.color = getContrastTextColor(color);
+    banner.style.color = customTextColorEnabled.checked ? textColorInput.value : getContrastTextColor(color);
+    banner.style.setProperty("-webkit-text-stroke", borderColorEnabled.checked ? `1px ${borderColorInput.value}` : "");
     banner.style.minHeight = `${height}px`;
     banner.style.lineHeight = `${height}px`;
     banner.style.fontSize = `${fontSize}px`;
@@ -106,7 +132,7 @@ const updatePreview = () => {
 const toggleCustomPanel = () => {
     const isCustom = (document.getElementById("size") as HTMLSelectElement).value === "custom";
     customSizePanel.hidden = !isCustom;
-    if (isCustom) updatePreview();
+    updatePreview();
 };
 
 // ─── Form mode ───────────────────────────────────────────────────────────────
@@ -125,6 +151,12 @@ const resetFormState = () => {
     editingIndex = null;
     form.reset();
     customSizePanel.hidden = true;
+    customTextColorEnabled.checked = false;
+    textColorInput.disabled = true;
+    borderColorEnabled.checked = false;
+    borderColorInput.disabled = true;
+    syncAutoTextColor();
+    updatePreview();
     setFormMode("create");
 };
 
@@ -139,13 +171,23 @@ const fillForm = (rule: Rule, index: number) => {
         (document.getElementById("customHeight") as HTMLInputElement).value = rule.customSize.height.toString();
         (document.getElementById("customFontSize") as HTMLInputElement).value = rule.customSize.fontSize.toString();
         customSizePanel.hidden = false;
-        updatePreview();
     } else {
         customSizePanel.hidden = true;
     }
 
+    const hasCustomTextColor = !!rule.textColor;
+    customTextColorEnabled.checked = hasCustomTextColor;
+    textColorInput.disabled = !hasCustomTextColor;
+    textColorInput.value = rule.textColor ?? (getContrastTextColor(rule.color) === "white" ? "#ffffff" : "#000000");
+
+    const hasBorderColor = !!rule.borderColor;
+    borderColorEnabled.checked = hasBorderColor;
+    borderColorInput.disabled = !hasBorderColor;
+    if (rule.borderColor) borderColorInput.value = rule.borderColor;
+
     editingIndex = index;
     setFormMode("edit");
+    updatePreview();
     formSection.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
@@ -165,6 +207,11 @@ export const loadRules = () => {
             const colorBadge = document.createElement("div");
             colorBadge.className = "rule-color-badge";
             colorBadge.style.backgroundColor = rule.color;
+            colorBadge.style.color = rule.textColor ?? getContrastTextColor(rule.color);
+            if (rule.borderColor) {
+                colorBadge.style.setProperty("-webkit-text-stroke", `1px ${rule.borderColor}`);
+            }
+            colorBadge.textContent = rule.label;
 
             const infoDiv = document.createElement("div");
             infoDiv.className = "rule-info";
@@ -314,9 +361,17 @@ form.addEventListener("submit", (e) => {
         fontSize: Math.max(8, parseInt((document.getElementById("customFontSize") as HTMLInputElement).value, 10) || 16),
     } : undefined;
 
+    const textColor = customTextColorEnabled.checked ? textColorInput.value : undefined;
+    const borderColor = borderColorEnabled.checked ? borderColorInput.value : undefined;
+
     chrome.storage.sync.get({ rules: [] }, (data) => {
         const rules: Rule[] = data.rules as Rule[];
-        const nextRule: Rule = { pattern, label, color, position, size, ...(customSize ? { customSize } : {}) };
+        const nextRule: Rule = {
+            pattern, label, color, position, size,
+            ...(customSize ? { customSize } : {}),
+            ...(textColor ? { textColor } : {}),
+            ...(borderColor ? { borderColor } : {}),
+        };
 
         if (editingIndex !== null && editingIndex >= 0 && editingIndex < rules.length) {
             rules[editingIndex] = nextRule;
@@ -352,11 +407,29 @@ importFile.addEventListener("change", () => {
 (document.getElementById("size") as HTMLSelectElement).addEventListener("change", toggleCustomPanel);
 (document.getElementById("customHeight") as HTMLInputElement).addEventListener("input", updatePreview);
 (document.getElementById("customFontSize") as HTMLInputElement).addEventListener("input", updatePreview);
-(document.getElementById("color") as HTMLInputElement).addEventListener("input", updatePreview);
+(document.getElementById("color") as HTMLInputElement).addEventListener("input", () => {
+    syncAutoTextColor();
+    updatePreview();
+});
 (document.getElementById("label") as HTMLInputElement).addEventListener("input", updatePreview);
+
+customTextColorEnabled.addEventListener("change", () => {
+    textColorInput.disabled = !customTextColorEnabled.checked;
+    updatePreview();
+});
+
+borderColorEnabled.addEventListener("change", () => {
+    borderColorInput.disabled = !borderColorEnabled.checked;
+    updatePreview();
+});
+
+textColorInput.addEventListener("input", updatePreview);
+borderColorInput.addEventListener("input", updatePreview);
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 
 applyTranslations();
 setFormMode("create");
+syncAutoTextColor();
+updatePreview();
 loadRules();

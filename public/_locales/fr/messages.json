@@ -23,6 +23,8 @@
     "sizeCustom":           { "message": "Personnalisée" },
     "fieldCustomHeight":    { "message": "Hauteur (px)" },
     "fieldCustomFontSize":  { "message": "Taille texte (px)" },
+    "fieldTextColor":       { "message": "Couleur du texte" },
+    "fieldBorderColor":     { "message": "Bordure du texte" },
     "previewLabel":         { "message": "Aperçu" },
     "btnAdd":               { "message": "Ajouter" },
     "btnSave":              { "message": "Enregistrer" },

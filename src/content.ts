@@ -43,7 +43,10 @@ export const injectBanner = (rule: Rule) => {
 
     const banner = document.createElement("div");
     banner.className = "env-banner";
-    banner.style.color = getContrastTextColor(rule.color);
+    banner.style.color = rule.textColor ?? getContrastTextColor(rule.color);
+    if (rule.borderColor) {
+        banner.style.setProperty("-webkit-text-stroke", `1px ${rule.borderColor}`);
+    }
 
     if (rule.size === "custom" && rule.customSize) {
         const { height, fontSize } = rule.customSize;
