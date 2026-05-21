@@ -4,6 +4,12 @@ Toutes les modifications notables de ce projet sont documentées ici.
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-05-21
+
+### Fixed
+
+- Test patch release avec le code de la version 1.3.0 manquant
+
 ## [1.3.0] - 2026-05-21
 
 ### Added
