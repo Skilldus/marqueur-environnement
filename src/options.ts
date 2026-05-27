@@ -45,7 +45,7 @@ themeToggle?.addEventListener("click", () => {
 const t = (key: string, substitutions?: string | string[]): string =>
     chrome.i18n.getMessage(key, substitutions) || key;
 
-const createSvgIcon = (innerHtml: string): SVGElement => {
+const createSvgIcon = (shapes: { tag: string; attrs: Record<string, string> }[]): SVGElement => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "14");
     svg.setAttribute("height", "14");
@@ -56,7 +56,11 @@ const createSvgIcon = (innerHtml: string): SVGElement => {
     svg.setAttribute("stroke-linecap", "round");
     svg.setAttribute("stroke-linejoin", "round");
     svg.setAttribute("aria-hidden", "true");
-    svg.innerHTML = innerHtml;
+    for (const { tag, attrs } of shapes) {
+        const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+        svg.appendChild(el);
+    }
     return svg;
 };
 
@@ -196,7 +200,7 @@ const fillForm = (rule: Rule, index: number) => {
 export const loadRules = () => {
     chrome.storage.sync.get({ rules: [] }, (data) => {
         const rules: Rule[] = data.rules as Rule[];
-        rulesList.innerHTML = "";
+        rulesList.replaceChildren();
 
         rulesCount.textContent = rules.length.toString();
         emptyState.hidden = rules.length > 0;
@@ -250,20 +254,20 @@ export const loadRules = () => {
             const editBtn = document.createElement("button");
             editBtn.type = "button";
             editBtn.className = "btn btn-outline";
-            editBtn.appendChild(createSvgIcon(
-                '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>' +
-                '<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'
-            ));
+            editBtn.appendChild(createSvgIcon([
+                { tag: "path", attrs: { d: "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" } },
+                { tag: "path", attrs: { d: "M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" } },
+            ]));
             editBtn.append(t("btnEdit"));
             editBtn.onclick = () => fillForm(rule, index);
 
             const deleteBtn = document.createElement("button");
             deleteBtn.type = "button";
             deleteBtn.className = "btn btn-danger";
-            deleteBtn.appendChild(createSvgIcon(
-                '<polyline points="3 6 5 6 21 6"/>' +
-                '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>'
-            ));
+            deleteBtn.appendChild(createSvgIcon([
+                { tag: "polyline", attrs: { points: "3 6 5 6 21 6" } },
+                { tag: "path", attrs: { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" } },
+            ]));
             deleteBtn.append(t("btnDelete"));
             deleteBtn.onclick = () => {
                 if (confirm(t("confirmDelete", [rule.label]))) {

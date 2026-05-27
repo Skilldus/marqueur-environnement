@@ -4,6 +4,15 @@ Toutes les modifications notables de ce projet sont documentées ici.
 
 ## [Unreleased]
 
+### Added
+- Support Firefox : `browser_specific_settings` et `data_collection_permissions` dans le manifest
+- Scripts de packaging distincts pour Chrome (`yarn package`) et Firefox (`yarn package:firefox`)
+- Artifacts CI séparés `extension-chrome.zip` et `extension-firefox.zip` dans GitHub Actions
+- Les deux zips sont joints à chaque GitHub Release
+
+### Fixed
+- Remplacement des usages de `innerHTML` par des API DOM sûres pour la conformité au validateur AMO
+
 ## [1.3.1] - 2026-05-21
 
 ### Fixed

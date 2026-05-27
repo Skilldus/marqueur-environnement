@@ -32,3 +32,21 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Package Chrome
+        run: cd dist && zip -r ../extension-chrome.zip .
+
+      - name: Package Firefox
+        run: cd dist && zip -r ../extension-firefox.zip .
+
+      - name: Upload Chrome artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-chrome
+          path: extension-chrome.zip
+
+      - name: Upload Firefox artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-firefox
+          path: extension-firefox.zip
+
