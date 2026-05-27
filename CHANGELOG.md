@@ -4,6 +4,8 @@ Toutes les modifications notables de ce projet sont documentées ici.
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-05-27
+
 ### Added
 - Support Firefox : `browser_specific_settings` et `data_collection_permissions` dans le manifest
 - Scripts de packaging distincts pour Chrome (`yarn package`) et Firefox (`yarn package:firefox`)
