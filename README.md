@@ -1,6 +1,6 @@
-# Indicateur d'Environnement
+# Environment Indicator
 
-> Extension Chrome et Firefox — Affiche un bandeau coloré sur les pages dont l'URL correspond à des règles configurables.
+> Chrome and Firefox extension — Displays a colored banner on pages whose URL matches configurable rules.
 
 [![Version](https://img.shields.io/github/v/tag/Skilldus/marqueur-environnement?label=version\&color=blue)](https://github.com/Skilldus/marqueur-environnement/releases)
 [![CI](https://github.com/Skilldus/marqueur-environnement/actions/workflows/ci.yml/badge.svg)](https://github.com/Skilldus/marqueur-environnement/actions/workflows/ci.yml)
@@ -10,17 +10,17 @@
 
 ---
 
-## Fonctionnalités
+## Features
 
-- **Détection par regex** — chaque règle teste `window.location.href`, la première correspondance gagne
-- **6 positions** — bandeau pleine largeur en haut/bas, ou badge diagonal dans les 4 coins
-- **4 tailles** — petite, moyenne, grande, ou dimensions personnalisées (hauteur + taille de police)
-- **Couleur de fond** libre avec **contraste texte automatique** (calcul WCAG)
-- **Couleur de texte** personnalisable en surcharge du calcul automatique
-- **Bordure de texte** optionnelle pour renforcer la lisibilité
-- **Import / Export** des règles en JSON
-- **Thème clair/sombre** sur la page d'options
-- **Multilingue** : 🇫🇷 Français · 🇬🇧 English · 🇪🇸 Español · 🇩🇪 Deutsch · 🇧🇷 Português
+- **Regex matching** — each rule tests `window.location.href`, the first match wins
+- **6 positions** — full-width banner at top/bottom, or diagonal badge in any of the 4 corners
+- **4 sizes** — small, medium, large, or custom dimensions (height + font size)
+- **Free background color** with **automatic text contrast** (WCAG calculation)
+- **Custom text color** to override the automatic contrast
+- **Optional text border** for improved readability
+- **Import / Export** rules as JSON
+- **Light/dark theme** on the options page
+- **Multilingual**: 🇫🇷 Français · 🇬🇧 English · 🇪🇸 Español · 🇩🇪 Deutsch · 🇧🇷 Português
 
 ---
 
@@ -28,51 +28,51 @@
 
 ### Chrome
 
-1. Télécharger `extension-chrome.zip` depuis la [dernière release](https://github.com/Skilldus/marqueur-environnement/releases/latest)
-2. Décompresser l'archive
-3. Ouvrir `chrome://extensions`, activer le **mode développeur**
-4. Cliquer **Charger l'extension non empaquetée** et sélectionner le dossier extrait
+1. Download `extension-chrome.zip` from the [latest release](https://github.com/Skilldus/marqueur-environnement/releases/latest)
+2. Extract the archive
+3. Open `chrome://extensions` and enable **Developer mode**
+4. Click **Load unpacked** and select the extracted folder
 
 ### Firefox
 
-1. Télécharger `extension-firefox.zip` depuis la [dernière release](https://github.com/Skilldus/marqueur-environnement/releases/latest)
-2. Ouvrir `about:debugging#/runtime/this-firefox`
-3. Cliquer **Charger un module complémentaire temporaire** et sélectionner le fichier zip
+1. Download `extension-firefox.zip` from the [latest release](https://github.com/Skilldus/marqueur-environnement/releases/latest)
+2. Open `about:debugging#/runtime/this-firefox`
+3. Click **Load Temporary Add-on** and select the zip file
 
 ---
 
 ## Configuration
 
-Accéder aux options via l'icône de l'extension → **Options** (ou `chrome://extensions` → Détails → Options de l'extension).
+Access the options via the extension icon → **Options** (or `chrome://extensions` → Details → Extension options).
 
-### Créer une règle
+### Creating a rule
 
-| Champ | Description |
+| Field | Description |
 |---|---|
-| **Pattern** | Expression régulière testée contre l'URL complète (`window.location.href`) |
-| **Label** | Texte affiché dans le bandeau (ex. `DEV`, `STAGING`, `PROD`) |
-| **Couleur** | Couleur de fond du bandeau en hexadécimal |
+| **Pattern** | Regular expression tested against the full URL (`window.location.href`) |
+| **Label** | Text displayed in the banner (e.g. `DEV`, `STAGING`, `PROD`) |
+| **Color** | Banner background color in hexadecimal |
 | **Position** | `top` · `bottom` · `top-left` · `top-right` · `bottom-left` · `bottom-right` |
-| **Taille** | `small` · `medium` · `large` · `custom` (hauteur + taille de police libres) |
-| **Couleur du texte** | Optionnelle — surcharge le contraste WCAG automatique |
-| **Bordure** | Optionnelle — ajoute un contour au texte |
+| **Size** | `small` · `medium` · `large` · `custom` (free height + font size) |
+| **Text color** | Optional — overrides the automatic WCAG contrast |
+| **Border** | Optional — adds an outline to the text |
 
-Les règles sont évaluées **dans l'ordre** : seul le premier match est affiché.
+Rules are evaluated **in order**: only the first match is displayed.
 
 ### Import / Export
 
-Le bouton **Exporter** génère un fichier `rules.json`. Le bouton **Importer** accepte ce même format pour restaurer ou partager une configuration.
+The **Export** button generates a `rules.json` file. The **Import** button accepts that same format to restore or share a configuration.
 
 ---
 
-## Développement
+## Development
 
-### Prérequis
+### Prerequisites
 
 - Node.js 22+
 - Yarn
 
-### Installation
+### Setup
 
 ```bash
 git clone https://github.com/Skilldus/marqueur-environnement.git
@@ -80,14 +80,14 @@ cd marqueur-environnement
 yarn install
 ```
 
-### Commandes
+### Commands
 
 ```bash
-yarn build          # Compile TypeScript → dist/
-yarn test           # Lance tous les tests (Vitest + jsdom)
-yarn test:watch     # Tests en mode watch
-yarn test:coverage  # Rapport de couverture
-yarn package        # Build + zip Chrome  → extension.zip
+yarn build           # Compile TypeScript → dist/
+yarn test            # Run all tests (Vitest + jsdom)
+yarn test:watch      # Tests in watch mode
+yarn test:coverage   # Coverage report
+yarn package         # Build + zip Chrome  → extension.zip
 yarn package:firefox # Build + zip Firefox → extension-firefox.zip
 ```
 
@@ -95,24 +95,24 @@ yarn package:firefox # Build + zip Firefox → extension-firefox.zip
 
 ```
 src/
-├── content.ts      # Script injecté sur chaque page (lecture des règles + injection du bandeau)
-├── options.ts      # Page d'options (CRUD des règles, import/export, thème)
-├── types.ts        # Types partagés : Rule, RulePosition, RuleSize
-└── utils.ts        # Helpers WCAG, validation import
+├── content.ts      # Script injected on every page (reads rules + injects banner)
+├── options.ts      # Options page (rule CRUD, import/export, theme)
+├── types.ts        # Shared types: Rule, RulePosition, RuleSize
+└── utils.ts        # WCAG helpers, import validation
 
 public/
 ├── manifest.json   # Manifest V3 (Chrome + Firefox)
-├── options.html    # Page d'options
-├── styles/         # CSS bandeau + options (thème clair/sombre)
-├── icons/          # Icônes 16/32/48/128 px
-└── _locales/       # Traductions (fr, en, es, de, pt_BR)
+├── options.html    # Options page
+├── styles/         # Banner + options CSS (light/dark theme)
+├── icons/          # Icons 16/32/48/128 px
+└── _locales/       # Translations (fr, en, es, de, pt_BR)
 ```
 
 ---
 
 ## Release
 
-Voir [`docs/releases.md`](docs/releases.md) pour le processus complet.
+See [`docs/releases.md`](docs/releases.md) for the full process.
 
 ```bash
 yarn release:minor   # 1.3.x → 1.4.0
@@ -120,10 +120,10 @@ yarn release:patch   # 1.4.0 → 1.4.1
 yarn release:major   # 1.4.x → 2.0.0
 ```
 
-Le tag déclenche automatiquement la CI qui crée la GitHub Release avec `extension-chrome.zip` et `extension-firefox.zip` en pièces jointes.
+Pushing a tag automatically triggers the CI, which creates the GitHub Release with `extension-chrome.zip` and `extension-firefox.zip` as attachments.
 
 ---
 
-## Licence
+## License
 
 [MIT](LICENSE)
