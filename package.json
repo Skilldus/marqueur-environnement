@@ -2,6 +2,10 @@
   "name": "eco-environment-banner",
   "version": "1.4.0",
   "license": "MIT",
+  "engines": {
+    "node": ">=22",
+    "yarn": ">=1.22"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

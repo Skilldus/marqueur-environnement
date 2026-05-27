@@ -65,20 +65,71 @@ The **Export** button generates a `rules.json` file. The **Import** button accep
 
 ---
 
-## Development
+## Building from source
 
-### Prerequisites
+These instructions allow you to reproduce the exact extension files from the source code.
 
-- Node.js 22+
-- Yarn
+### Environment
 
-### Setup
+| | Requirement |
+|---|---|
+| **OS** | Linux, macOS, or Windows 10+ |
+| **Node.js** | v22 — [nodejs.org/en/download](https://nodejs.org/en/download) |
+| **Yarn** | v1.22 — `npm install -g yarn` |
+| **zip** | Pre-installed on Linux/macOS. On Windows, Git Bash (bundled with [Git for Windows](https://git-scm.com/)) provides `zip`. |
+
+### Step-by-step
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/Skilldus/marqueur-environnement.git
 cd marqueur-environnement
-yarn install
+
+# 2. Install exact dependencies from the lockfile
+yarn install --frozen-lockfile
+
+# 3. Compile TypeScript → dist/
+yarn build
+
+# 4a. Package for Firefox
+cd dist && zip -r ../extension-firefox.zip . && cd ..
+
+# 4b. Package for Chrome
+cd dist && zip -r ../extension-chrome.zip . && cd ..
 ```
+
+The resulting `extension-firefox.zip` and `extension-chrome.zip` are the exact files submitted to the stores.
+
+### Verify the output
+
+```bash
+# List the contents of the Firefox zip
+unzip -l extension-firefox.zip
+```
+
+Expected files at the root of the zip:
+
+```
+manifest.json
+content.js
+options.js
+options.html
+styles/banner.css
+styles/options.css
+icons/icon16.png
+icons/icon32.png
+icons/icon48.png
+icons/icon128.png
+_locales/fr/messages.json
+_locales/en/messages.json
+_locales/es/messages.json
+_locales/de/messages.json
+_locales/pt_BR/messages.json
+```
+
+---
+
+## Development
 
 ### Commands
 
